@@ -1,0 +1,198 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "functions.h"
+
+
+
+
+int main()
+{
+
+    FILE *file_in=fopen("Book.txt", "r");
+    FILE *file_out=fopen("TextModified.txt","w");
+
+    char *auxstring = (char *)malloc(5000*sizeof(char));
+    char *the_word_substitute = malloc(10*sizeof(char));
+    char *word= malloc(10*sizeof(char));
+
+    int num;
+    int command;
+    int ok=0;
+
+    printf("  \t\tYou can choose a command between <1 and 5>.\n");
+    printf("  \t\t    Otherwise the program will stop.\n");
+    printf("\n");
+
+    printf("   Input the number of command if u want  to start the program: ");
+    scanf("%d",&command);
+    printf("\n");
+
+  while(command >=1 && command <= 5){
+     printf("\n");
+     printf("\tInsert the command that your prefer: ");
+     scanf("%d",&command);
+     printf("\n");
+     switch(command)
+     {
+
+      case 1:
+
+          printf("  Insert the word you want to search for:  ");
+          scanf("%s",word);
+          printf("\n");
+
+          if(find_word(auxstring,word)!=0){
+             printf("  The word <%s> it was found in your file!",word);
+             printf("\n\n");
+          }
+           else{
+              printf("  The word <%s> it was not found in your file... ",word);
+              printf("\n\n");
+           }
+
+           fclose(file_in);
+           fclose(file_out);
+
+           printf("\n");
+
+           break;
+
+       case 2:
+
+          file_in=fopen("Book.txt", "r");
+
+          printf("  Insert the word you want to know the number of occurance:  ");
+          scanf("%s",word);
+          printf("\n");
+          int aux = 0;
+
+          while(fgets(auxstring,5000,file_in)!=NULL){
+                 aux = aux + number_of_occurrences(auxstring, word);
+          }
+          if(aux!=0){
+             printf("  The word %s appears %d times in your file!\n", word, aux);
+             printf("\n");
+          }else{
+             printf("  The word %s did not appear in your file... ",word);
+             printf("\n");
+          }
+
+          fclose(file_in);
+          fclose(file_out);
+
+          printf("\n");
+          break;
+       case 3:
+
+          file_in=fopen("Book.txt", "r");
+          file_out=fopen("TextModified.txt","w");
+
+          printf("  Enter the word you want to replace: ");
+          scanf("%s",word);
+          printf("\n");
+
+          printf("  Enter the word that you want to replace your word:  ");
+          scanf("%s",the_word_substitute);
+          printf("\n");
+
+          while(fgets(auxstring,5000,file_in)!=NULL){
+
+                if( number_of_occurrences(auxstring, word) == 0){
+                        fprintf(file_out, "\n%s", auxstring);
+                } else{
+                        replace_word(auxstring, word, the_word_substitute, file_out);
+                        ok=1;
+                }
+          }
+          if(ok==0){
+            printf("  Your word <%s> is not present in this text!\n",word);
+          }else{
+             printf("  Now the word <%s> will be replaced in your file by <%s>:\n",word,the_word_substitute);
+             printf("  Check in  file textModified!\n");
+          }
+          printf("\n");
+
+          fclose(file_in);
+          fclose(file_out);
+
+          break;
+
+       case 4:
+
+          file_in=fopen("Book.txt", "r");
+          file_out=fopen("textModified.txt","w");
+
+          printf("  Enter the word you want to replace: ");
+          scanf("%s",word);
+          printf("\n");
+
+          printf("  Enter the word that you want to replace your word:  ");
+          scanf("%s",the_word_substitute);
+          printf("\n");
+
+          printf("  Enter the number of the word apparition that you want to replace: ");
+          scanf("%d",&num);
+          printf("\n");
+
+          while(fgets(auxstring,5000,file_in)!=NULL){
+
+                if( number_of_occurrences(auxstring, word) == 0){
+                        fprintf(file_out, "\n%s", auxstring);
+                } else{
+                        replace_a_specific_word_app(auxstring, word, the_word_substitute, num, file_out);
+                        ok=1;
+                }
+          }
+          if(ok==0){
+             printf("  Your word <%s> is not present in this text!\n",word);
+          }else{
+             printf("Now the <%d> apparition of the word <%s> will be replaced in your file by <%s>:\n",num,word,the_word_substitute);
+             printf("  Check in file TextModified!\n\n");
+          }
+
+          fclose(file_in);
+          fclose(file_out);
+
+          break;
+
+       case 5:
+
+          show_top_list(file_in);
+          fclose(file_in);
+          fclose(file_out);
+          printf("\n\n");
+          break;
+
+       default:
+
+         printf("Are you sure you want to stop?\n");
+
+         printf("Press number between 1 and 5 if u want to continue or any numer else: ");
+
+         scanf("%d",&command);
+     }
+  }
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
