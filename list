@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+int alph=97;
+
+struct g_node{
+       char *text;
+       int counter;
+       struct g_node *next;
+};
+void swap_words(char **word1, char **word2){
+        char *temp = *word2;
+        *word2 = *word1;
+        *word1 = temp;
+}
+
+void swap_counters(struct g_node *word_count1, struct g_node *word_cout2){
+        int temp = word_count1->counter;
+        word_count1->counter = word_cout2->counter;
+        word_cout2->counter = temp;
+}
+
+
+void sort_list( struct g_node *head){
+        struct g_node *iterator = head;
+
+        int swap;
+        struct g_node *pointer1;
+
+        if(iterator->next == NULL){
+                return;
+        }
+
+        do{
+                swap = 0;
+                pointer1 = iterator->next;
+                while (pointer1 != NULL && pointer1->next != NULL){
+
+                        if( pointer1->counter < pointer1->next->counter){
+                                swap_counters(pointer1, pointer1->next);
+                                swap_words(&pointer1->text, &pointer1->next->text);
+                                swap = 1;
+                        }
+
+                        pointer1 = pointer1->next;
+                }
+
+            }while (swap!=0);
+
+
+}
+void push_word_begining(struct g_node **heads, char *word){
+
+        struct g_node *new_element = malloc(sizeof(struct g_node));
+
+        new_element->text = malloc(sizeof(strlen(word) + 1));
+        strcpy(new_element->text, word);
+        new_element->next = (*heads)->next;
+        new_element->counter = 1;
+        (*heads)->next = new_element;
+
+}
+
+
+int search_word (struct g_node **heads, char *word){
+        struct g_node *iterator = *heads;
+                while( iterator->next != NULL ){
+                        iterator = iterator->next;
+                        if(strcmp(iterator->text, word) == 0){
+                                iterator->counter = iterator->counter + 1 ;
+                                return 1;
+                        }
+
+                }
+
+        return 0;
+}
+
+void print_list( struct g_node **head){
+
+        struct g_node *iterator = *head;
+        while(iterator->next != 0){
+                printf("\n");
+                printf("\t\tThe words who starts with word %c:\n\n",alph);
+                alph++;
+
+
+                while(iterator->next != NULL){
+                      sort_list(iterator);
+                      printf("%d times--> %s\n", iterator->next->counter , iterator->next->text );
+                      iterator = iterator->next;
+                }
+        }
+
+}
+
+void show_top_list(FILE *file_in){
+
+        file_in=fopen("Book.txt", "r");
+
+        if( file_in == NULL){
+                printf("There is an error reading from file.");
+                exit(1);
+        }
+
+        char *auxstring = (char *)malloc(3000*sizeof(char));
+        int index;
+        struct g_node *head[26];
+
+        for( index = 0; index < 26; index++){
+                head[index] = malloc(sizeof(struct g_node));
+                head[index]->next = NULL;
+        }
+
+        char *jump;
+        int init;
+
+
+        while(fgets(auxstring,3000,file_in)){
+                jump= strtok(auxstring, "  .,;:'?-!\n\t");
+
+                while( jump != 0){
+                        init = jump[0];
+                        if (init >= 'a' && init <= 'z'){
+                                init = init - 'a';
+                        }else if (init >= 'A' && init <= 'Z'){
+                                init = init - 'A';
+                                }else {
+                                        break;
+                                        }
+                        if( search_word(&head[init], jump) == 0){
+                                push_word_begining(&head[init], jump);
+
+                        }
+                                jump = strtok(NULL, "  .,;:'?-!\n\t");
+
+                }
+
+        }
+        printf("\t\t\t   The list is: \n");
+
+
+        for(index = 0; index < 26; index++){
+              print_list(&head[index]);
+        }
+}
