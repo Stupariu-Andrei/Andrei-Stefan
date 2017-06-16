@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void replace_word( char *text, char *what_toReplace, char *with_whatToReplace, FILE *file_out){
+
+     char *token = strtok(text, "  .,;:'-?'!\n\t");
+
+     while( token != NULL){
+         if( strcmp(token, what_toReplace) == 0){
+
+                fprintf(file_out, "%s ", with_whatToReplace);
+
+                    }else{
+
+                         fprintf(file_out, "%s ", token);
+
+                    }
+         token = strtok(NULL, "  .,;:?-!'\n\t");
+     }
+
+}
