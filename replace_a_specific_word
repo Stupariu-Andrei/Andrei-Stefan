@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int counter = 0;
+
+void replace_a_specific_word_app( char *text, char *what_toReplace, char *with_whatToReplace, int number, FILE *file_out){
+     char *jump = strtok(text, "  .,;:'?-!\n\t");
+
+     while( jump != NULL){
+          if( strcmp(jump, what_toReplace) == 0){
+                counter++;
+                if( counter == number){
+                   fprintf(file_out, "%s ", with_whatToReplace);
+                }else{
+                   fprintf(file_out, "%s ", jump);
+                }
+           }else{
+               fprintf(file_out, "%s ", jump);
+           }
+           jump = strtok(NULL, "  .,;:?-!'\n\t");
+     }
+}
