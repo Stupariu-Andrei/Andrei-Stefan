@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int number_of_occurrences( char *text, char *word){
+
+
+        int count = 0;
+        char *temp;
+        char *aux = (char *)malloc(5000 * sizeof(char));
+        strcpy(aux, text);
+
+
+        temp = strtok(aux, " ,.:;?!'-\t\n");
+        while( temp != NULL )  {
+                if( strcmp(temp, word) == 0){
+                        count++;
+                }
+                temp = strtok('\0', " ,.:;?!-'\t\n");
+        }
+
+        free(temp);
+        free(aux);
+
+        return count;
+}
+
