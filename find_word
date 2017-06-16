@@ -1,0 +1,25 @@
+#include "stdio.h"
+#include <stdlib.h>
+#include <string.h>
+
+int find_word(char string[100],char searchword[50])
+{
+    int num=0;
+    FILE *in_file = fopen("Book.txt", "r");
+
+    if (in_file == NULL)
+    {
+       printf("Error file missing\n");
+       exit(-1);
+    }
+    while(feof(in_file)==0)
+    {
+      fscanf(in_file,"%s",string);
+      if(strcmp(string,searchword)==0)
+        num++;
+    }
+    if (num>0)
+       return 1;
+         else
+           return 0;
+}
